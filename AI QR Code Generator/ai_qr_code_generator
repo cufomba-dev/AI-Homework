@@ -19,6 +19,7 @@ def generate_qr_code(input_url, file_name):
     
     # Save QR code image
     img.save(file_name)
+    
 # Main
 def main():
     print("AI QR Code Generator")
