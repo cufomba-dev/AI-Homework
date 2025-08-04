@@ -88,7 +88,8 @@ def train_autoencoder(X_train_scaled, X_test_scaled, y_train, y_test, contaminat
 def visualize_results(anomaly_scores, y_test, conf_matrix, roc_auc_score):
     
     fig, axes = plt.subplots(2, 2, figsize=(15, 12))  
-    # Anomaly curve
+    
+    # Anomaly score distribution
     axes[0,0].hist(anomaly_scores[y_test == 0], bins=50, alpha=0.5, label='Non-Fraud', color='blue')
     axes[0,0].hist(anomaly_scores[y_test == 1], bins=50, alpha=0.5, label='Fraud', color='red')
     axes[0,0].set_title('Distribution of Anomaly Scores')
@@ -115,21 +116,22 @@ def visualize_results(anomaly_scores, y_test, conf_matrix, roc_auc_score):
     precision, recall, _ = precision_recall_curve(y_test, anomaly_scores)
     avg_precision = average_precision_score(y_test, anomaly_scores)
     
-    axes[1,0].plot(recall, precision, color='blue', lw=2,label=f'Precision-Recall curve (AP = {avg_precision:.3f})')
+    axes[1,0].plot(recall, precision, color='blue', lw=2,
+                   label=f'Precision-Recall curve (AP = {avg_precision:.3f})')
     axes[1,0].set_xlabel('Recall')
     axes[1,0].set_ylabel('Precision')
     axes[1,0].set_title('Precision-Recall Curve')
     axes[1,0].legend()
     axes[1,0].grid(True)
-        
-    # Confusion Matrix Heatmap
-    sns.heatmap(conf_matrix, annot=True, fmt='d', cmap='Blues', ax=axes[1])
+    
+    # Confusion Matrix
+    sns.heatmap(conf_matrix, annot=True, fmt='d', cmap='Blues', ax=axes[1,1])
     axes[1,1].set_title('Confusion Matrix')
     axes[1,1].set_xlabel('Predicted')
     axes[1,1].set_ylabel('Actual')
     
     plt.tight_layout()
-    plt.savefig('output.png')
+    plt.savefig('output.png', dpi=300, bbox_inches='tight')
     plt.show()
     
 # Main
